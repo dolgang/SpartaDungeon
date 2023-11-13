@@ -19,8 +19,8 @@ namespace SpartaDungeon
             player = new Character("Chad", "전사", 1, 10, 5, 100, 1500);
 
             // 아이템 정보 세팅
-            Item sword = new Item("철 검", ItemType.Weapon, 100, 20);
-            Item armor = new Item("가죽 갑옷", ItemType.Armor, 150, 30);
+            Item sword = new Item("철 검", ItemType.Weapon, 100, 20, 3, 0);
+            Item armor = new Item("가죽 갑옷", ItemType.Armor, 150, 30, 0, 2);
             player.GetItem(sword);
             player.GetItem(armor);
         }
@@ -60,8 +60,8 @@ namespace SpartaDungeon
             Console.WriteLine();
             Console.WriteLine($"Lv.{player.Level}");
             Console.WriteLine($"{player.Name}({player.Job})");
-            Console.WriteLine($"공격력 :{player.Atk}");
-            Console.WriteLine($"방어력 : {player.Def}");
+            Console.WriteLine($"공격력 :{player.Atk} {player.AddStatusInfo(Status.Atk)}");
+            Console.WriteLine($"방어력 : {player.Def} {player.AddStatusInfo(Status.Def)}");
             Console.WriteLine($"체력 : {player.Hp}");
             Console.WriteLine($"Gold : {player.Gold} G");
             Console.WriteLine();
@@ -81,7 +81,7 @@ namespace SpartaDungeon
             Console.Clear();
             Console.WriteLine("인벤토리");
             Console.WriteLine("보유 중인 아이템을 확인 할 수 있습니다.");
-            Console.WriteLine("\n");
+            Console.WriteLine("");
 
             for (int i = 0; i < player.InventoryCountCheck(); i++)
             {
@@ -90,7 +90,7 @@ namespace SpartaDungeon
                 Console.WriteLine($"- {currentItem.IsEquip()} {currentItem.Name}");
             }
 
-            Console.WriteLine("\n");
+            Console.WriteLine("");
             Console.WriteLine("1. 장착관리");
             Console.WriteLine("0. 나가기");
 
@@ -112,7 +112,7 @@ namespace SpartaDungeon
             Console.Clear();
             Console.WriteLine("장착관리");
             Console.WriteLine("아이템의 숫자를 입력하면 장비를 장착 및 해제할 수 있습니다.");
-            Console.WriteLine("\n");
+            Console.WriteLine("");
 
             for (int i = 0; i < player.InventoryCountCheck(); i++)
             {
@@ -121,7 +121,7 @@ namespace SpartaDungeon
                 Console.WriteLine($"- {i + 1}. {currentItem.IsEquip()} {currentItem.Name}");
             }
 
-            Console.WriteLine("\n");
+            Console.WriteLine("");
             Console.WriteLine("0. 나가기");
 
             int input = CheckValidInput(0, player.InventoryCountCheck());
@@ -142,6 +142,16 @@ namespace SpartaDungeon
         {
             Item currentItem = player.Inventory[input - 1];
             currentItem.Equip = !currentItem.Equip;
+            if (currentItem.Equip)
+            {
+                currentItem.EquipmentStatusInfo(out int AtkBonus,out int DefBonus);
+                player.AddStatusData(AtkBonus, DefBonus);
+            }
+            else
+            {
+                currentItem.EquipmentStatusInfo(out int AtkBonus, out int DefBonus);
+                player.AddStatusData(AtkBonus *= -1, DefBonus * -1);
+            }
         }
 
 

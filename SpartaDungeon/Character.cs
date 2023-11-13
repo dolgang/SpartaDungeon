@@ -6,13 +6,18 @@ using System.Threading.Tasks;
 
 namespace SpartaDungeon
 {
+    public enum Status { Atk, Def, Hp }
+
+
     public class Character
     {
         public string Name { get; }
         public string Job { get; }
         public int Level { get; }
-        public int Atk { get; }
-        public int Def { get; }
+        public int Atk { get; private set; }
+        public int AtkBonus;
+        public int Def { get; private set; }
+        public int DefBonus;
         public int Hp { get; }
         public int Gold { get; }
         private List<Item> inventory;
@@ -33,6 +38,35 @@ namespace SpartaDungeon
         {
             inventory.Add(getItem);
         }
+        
+        public void AddStatusData(int AtkBonus, int DefBonus)
+        {
+            Atk += AtkBonus;
+            Def += DefBonus;
+            this.AtkBonus += AtkBonus;
+            this.DefBonus += DefBonus;
+        }
+
+        public String AddStatusInfo(Status status)
+        {
+            switch (status)
+            {
+                case Status.Atk:
+                    if (AtkBonus > 0)
+                    {
+                        return $"(+{AtkBonus})";
+                    }
+                    break;
+                case Status.Def:
+                    if (DefBonus > 0)
+                    {
+                        return $"(+{DefBonus})";
+                    }
+                    break;
+            }
+            return "";
+        }
+
 
         public int InventoryCountCheck () { return inventory.Count; }
         public List<Item> Inventory { get { return inventory; } }

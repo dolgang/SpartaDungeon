@@ -16,14 +16,17 @@ namespace SpartaDungeon
         public int Price { get; }
         public int Sellprice { get; }
 
-        public int Atk;
+        public int AtkBonus;
+        public int DefBonus;
 
-        public Item (string name, Enum type, int price, int sellprice)
+        public Item (string name, Enum type, int price, int sellprice, int atkbonus, int defbonus)
         {
             Name = name;
             Type = type;
             Price = price;
             Sellprice = sellprice;
+            AtkBonus = atkbonus;
+            DefBonus = defbonus;
         }
 
         public String IsEquip()
@@ -32,11 +35,15 @@ namespace SpartaDungeon
             {
                 case false:
                     return "";
-                    break;
                 case true:
                     return "[E]";
-                    break;
             }
+        }
+
+        public void EquipmentStatusInfo(out int AtkBonus, out int DefBonus)
+        {
+            AtkBonus = this.AtkBonus;
+            DefBonus = this.DefBonus;
         }
     }
 }
