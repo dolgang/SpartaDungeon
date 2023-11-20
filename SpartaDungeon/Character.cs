@@ -6,43 +6,42 @@ using System.Threading.Tasks;
 
 namespace SpartaDungeon
 {
-    public enum Status { Atk, Def, Hp }
+    public interface ICharacter
+    {
+        public void TakeDamage(int Damage);
+    }
 
 
-    public class Character
+    public class Character : ICharacter
     {
         public string Name { get; }
         public string Job { get; }
         public int Level { get; }
-        public int Atk { get; private set; }
+        public int Attack { get; private set; }
         public int AtkBonus;
-        public int Def { get; private set; }
+        public int Defence { get; private set; }
         public int DefBonus;
-        public int Hp { get; }
+        public int HitPoint { get; }
+        public int CurrentHitPoint;
         public int Gold { get; }
-        private List<Item> inventory;
 
         public Character(string name, string job, int level, int atk, int def, int hp, int gold)
         {
             Name = name;
             Job = job;
             Level = level;
-            Atk = atk;
-            Def = def;
-            Hp = hp;
+            Attack = atk;
+            Defence = def;
+            HitPoint = hp;
             Gold = gold;
-            inventory = new List<Item>();
+            CurrentHitPoint = HitPoint;
         }
 
-        public void GetItem(Item getItem)
-        {
-            inventory.Add(getItem);
-        }
         
         public void AddStatusData(int AtkBonus, int DefBonus)
         {
-            Atk += AtkBonus;
-            Def += DefBonus;
+            Attack += AtkBonus;
+            Defence += DefBonus;
             this.AtkBonus += AtkBonus;
             this.DefBonus += DefBonus;
         }
@@ -51,13 +50,13 @@ namespace SpartaDungeon
         {
             switch (status)
             {
-                case Status.Atk:
+                case Status.Attack:
                     if (AtkBonus > 0)
                     {
                         return $"(+{AtkBonus})";
                     }
                     break;
-                case Status.Def:
+                case Status.Defence:
                     if (DefBonus > 0)
                     {
                         return $"(+{DefBonus})";
@@ -67,8 +66,37 @@ namespace SpartaDungeon
             return "";
         }
 
+        public void TakeDamage(int Damage)
+        {
+            CurrentHitPoint -= Damage;
+        }
 
-        public int InventoryCountCheck () { return inventory.Count; }
+    }
+
+    public class Warrior : Character
+    {
+        private List<Item> inventory;
+        private Item[] equipmentslot = new Item[5];
+
+        public Warrior(string name, string job, int level, int atk, int def, int hp, int gold) : base(name, job, level, atk, def, hp ,gold)
+        {
+            inventory = new List<Item>();
+        }
+
+        public int InventoryCountCheck() { return inventory.Count; }
         public List<Item> Inventory { get { return inventory; } }
+
+        public void GetItem(Item getItem)
+        {
+            inventory.Add(getItem);
+        }
+    }
+
+    public class Monster : Character
+    {
+        public Monster(string name, string job, int level, int atk, int def, int hp, int gold) : base(name, job, level, atk, def, hp, gold)
+        {
+            
+        }
     }
 }

@@ -3,29 +3,35 @@ using System.Numerics;
 
 namespace SpartaDungeon
 {
-    internal class GameManager
+    internal class Program
     {
-        private static Character player;
+        public static GameManager GameManager = new GameManager();
 
         static void Main(string[] args)
         {
-            GameDataSetting();
-            DisplayGameIntro();
+            GameManager.GameDataSetting();
+            GameManager.DisplayGameIntro();
         }
+    }
+    
+    public class GameManager
+    {
+        public static Warrior player;
 
-        static void GameDataSetting()
+        public void GameDataSetting()
         {
             // 캐릭터 정보 세팅
-            player = new Character("Chad", "전사", 1, 10, 5, 100, 1500);
+
+            player = new Warrior("Chad", "전사", 1, 10, 5, 100, 1500);
 
             // 아이템 정보 세팅
-            Item sword = new Item("철 검", ItemType.Weapon, 100, 20, 3, 0);
-            Item armor = new Item("가죽 갑옷", ItemType.Armor, 150, 30, 0, 2);
+            Equipment sword = new Equipment("철 검", ItemType.Equipment, EquipmentType.Weapon, 100, 20, 3);
+            Equipment armor = new Equipment("가죽 갑옷", ItemType.Equipment, EquipmentType.Armor, 150, 30, 0, 2);
             player.GetItem(sword);
             player.GetItem(armor);
         }
 
-        static void DisplayGameIntro()
+        public void DisplayGameIntro()
         {
             Console.Clear();
 
@@ -51,7 +57,7 @@ namespace SpartaDungeon
             }
         }
 
-        static void DisplayMyInfo()
+        public void DisplayMyInfo()
         {
             Console.Clear();
 
@@ -60,9 +66,9 @@ namespace SpartaDungeon
             Console.WriteLine();
             Console.WriteLine($"Lv.{player.Level}");
             Console.WriteLine($"{player.Name}({player.Job})");
-            Console.WriteLine($"공격력 :{player.Atk} {player.AddStatusInfo(Status.Atk)}");
-            Console.WriteLine($"방어력 : {player.Def} {player.AddStatusInfo(Status.Def)}");
-            Console.WriteLine($"체력 : {player.Hp}");
+            Console.WriteLine($"공격력 :{player.Attack} {player.AddStatusInfo(Status.Attack)}");
+            Console.WriteLine($"방어력 : {player.Defence} {player.AddStatusInfo(Status.Defence)}");
+            Console.WriteLine($"체력 : {player.HitPoint}");
             Console.WriteLine($"Gold : {player.Gold} G");
             Console.WriteLine();
             Console.WriteLine("0. 나가기");
@@ -76,7 +82,7 @@ namespace SpartaDungeon
             }
         }
 
-        static void DisplayInventory()
+        public void DisplayInventory()
         {
             Console.Clear();
             Console.WriteLine("인벤토리");
@@ -107,7 +113,7 @@ namespace SpartaDungeon
             }
         }
 
-        static void DisplayEquipControl()
+        public void DisplayEquipControl()
         {
             Console.Clear();
             Console.WriteLine("장착관리");
@@ -137,14 +143,13 @@ namespace SpartaDungeon
             
         }
 
-
-        static void EquipmentSet(int input)
+        public void EquipmentSet(int input)
         {
             Item currentItem = player.Inventory[input - 1];
             currentItem.Equip = !currentItem.Equip;
             if (currentItem.Equip)
             {
-                currentItem.EquipmentStatusInfo(out int AtkBonus,out int DefBonus);
+                currentItem.EquipmentStatusInfo(out int AtkBonus, out int DefBonus);
                 player.AddStatusData(AtkBonus, DefBonus);
             }
             else
@@ -155,7 +160,7 @@ namespace SpartaDungeon
         }
 
 
-        static int CheckValidInput(int min, int max)
+        public int CheckValidInput(int min, int max)
         {
             while (true)
             {
