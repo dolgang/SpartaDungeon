@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace SpartaDungeon
         public int DefBonus;
         public int Hp { get; }
         public int Gold { get; }
-        private List<Item> inventory;
+        List<Item> inventory;
 
         public Character(string name, string job, int level, int atk, int def, int hp, int gold)
         {
@@ -34,9 +35,25 @@ namespace SpartaDungeon
             inventory = new List<Item>();
         }
 
-        public void GetItem(Item getItem)
+        public void GetItem(int Index)
         {
-            inventory.Add(getItem);
+            DataRow? itemdata = Date.ItemDataTable.Rows.Find(Index);
+            int itemType = Convert.ToInt32(itemdata["ItemType"]);
+            switch (itemType)
+            {
+                case 0:
+                    Equipment newEquipment = new Equipment();
+                    Equipment addEquipment = newEquipment.ItemAdd(Index);
+                    if (addEquipment != null) { inventory.Add(addEquipment); }
+                    break;
+                case 1:
+                    Supplies newSupplies = new Supplies();
+                    Supplies addSupplies = newSupplies.ItemAdd(Index);
+                    if (addSupplies != null) { inventory.Add(addSupplies); }
+                    break;
+                default: 
+                    break;
+            }
         }
         
         public void AddStatusData(int AtkBonus, int DefBonus)

@@ -9,6 +9,7 @@ namespace SpartaDungeon
 
         static void Main(string[] args)
         {
+            Date.ItemDataTableSetting();
             GameDataSetting();
             DisplayGameIntro();
         }
@@ -19,10 +20,9 @@ namespace SpartaDungeon
             player = new Character("Chad", "전사", 1, 10, 5, 100, 1500);
 
             // 아이템 정보 세팅
-            Item sword = new Item("철 검", ItemType.Weapon, 100, 20, 3, 0);
-            Item armor = new Item("가죽 갑옷", ItemType.Armor, 150, 30, 0, 2);
-            player.GetItem(sword);
-            player.GetItem(armor);
+            player.GetItem(0);
+            player.GetItem(1);
+            player.GetItem(2);
         }
 
         static void DisplayGameIntro()
@@ -87,7 +87,7 @@ namespace SpartaDungeon
             {
                 Item currentItem = player.Inventory[i];
 
-                Console.WriteLine($"- {currentItem.IsEquip()} {currentItem.Name}");
+                Console.WriteLine($"- {currentItem.Name}");
             }
 
             Console.WriteLine("");
@@ -118,7 +118,7 @@ namespace SpartaDungeon
             {
                 Item currentItem = player.Inventory[i];
 
-                Console.WriteLine($"- {i + 1}. {currentItem.IsEquip()} {currentItem.Name}");
+                Console.WriteLine($"- {i + 1}. {currentItem.Name}");
             }
 
             Console.WriteLine("");
@@ -131,27 +131,9 @@ namespace SpartaDungeon
             }
             else
             {
-                EquipmentSet(input);
                 DisplayEquipControl();
             }
             
-        }
-
-
-        static void EquipmentSet(int input)
-        {
-            Item currentItem = player.Inventory[input - 1];
-            currentItem.Equip = !currentItem.Equip;
-            if (currentItem.Equip)
-            {
-                currentItem.EquipmentStatusInfo(out int AtkBonus,out int DefBonus);
-                player.AddStatusData(AtkBonus, DefBonus);
-            }
-            else
-            {
-                currentItem.EquipmentStatusInfo(out int AtkBonus, out int DefBonus);
-                player.AddStatusData(AtkBonus *= -1, DefBonus * -1);
-            }
         }
 
 
